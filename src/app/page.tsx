@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 
 // Create a type for our popup
 type Popup = {
+  zIndex?: number;
   id: number;
   message: string;
   position: { x: number; y: number };
@@ -49,6 +50,23 @@ const popupMessages: { message: string; type: 'claim' | 'verify' | 'regular' }[]
 export default function Home() {
   const [popups, setPopups] = useState<Popup[]>([]);
   const [audio] = useState(typeof window !== 'undefined' ? new Audio('/erro-2.mp3') : null);
+  const [topZIndex, setTopZIndex] = useState(1000);
+
+  const handleBuyClick = () => {
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play();
+    }
+    createPopup(window.innerWidth/2, window.innerHeight/2);
+  };
+
+  const handleDragStart = (popupId: number) => {
+    setTopZIndex(prev => prev + 1);
+    setPopups(prev => prev.map(p => ({
+      ...p,
+      zIndex: p.id === popupId ? topZIndex : p.zIndex || 1000
+    })));
+  };
 
   const createPopup = (x: number, y: number) => {
     const messageObj = popupMessages[Math.floor(Math.random() * popupMessages.length)];
@@ -157,7 +175,7 @@ export default function Home() {
         <h1 className="text-6xl font-bold text-white mb-4">$BIGS</h1>
         <p className="text-2xl text-white mb-8">Boomer Is Getting Scammed</p>
         <button
-          onClick={() => createPopup(window.innerWidth/2, window.innerHeight/2)}
+          onClick={handleBuyClick}
           className="bg-[#0058e6] text-white px-8 py-4 rounded-lg hover:bg-[#0046b8]"
         >
           Buy $BIGS Now!
@@ -170,10 +188,12 @@ export default function Home() {
           key={popup.id}
           drag
           dragMomentum={false}
+          onDragStart={() => handleDragStart(popup.id)}
           className="fixed bg-[#ECE9D8] border-2 border-[#0058e6] rounded-t-lg w-[300px]"
           style={{
             left: popup.position.x,
             top: popup.position.y,
+            zIndex: popup.zIndex || 1000
           }}
         >
           <div className="bg-gradient-to-r from-[#0058e6] to-[#3d91ff] p-2 flex justify-between items-center rounded-t-lg cursor-move">
