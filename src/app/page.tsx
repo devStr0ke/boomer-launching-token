@@ -1,5 +1,6 @@
 'use client'
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 // Create a type for our popup
@@ -20,6 +21,7 @@ const popupMessages = [
 
 export default function Home() {
   const [popups, setPopups] = useState<Popup[]>([]);
+  const [audio] = useState(typeof window !== 'undefined' ? new Audio('/erro-2.mp3') : null);
 
   const createPopup = (x: number, y: number) => {
     const newPopup: Popup = {
@@ -32,6 +34,12 @@ export default function Home() {
 
   const handlePopupClick = (e: React.MouseEvent, popup: Popup) => {
     e.preventDefault();
+    // Play the sound
+    if (audio) {
+      audio.currentTime = 0; // Reset sound to start
+      audio.play();
+    }
+    
     // Remove clicked popup
     setPopups(prev => prev.filter(p => p.id !== popup.id));
     // Create 2 new popups at random positions
@@ -61,16 +69,18 @@ export default function Home() {
 
       {/* Popups */}
       {popups.map(popup => (
-        <div
+        <motion.div
           key={popup.id}
+          drag
+          dragMomentum={false}
           className="fixed bg-[#ECE9D8] border-2 border-[#0058e6] rounded-t-lg w-[300px]"
           style={{
             left: popup.position.x,
             top: popup.position.y,
           }}
         >
-          <div className="bg-gradient-to-r from-[#0058e6] to-[#3d91ff] p-2 flex justify-between items-center rounded-t-lg">
-            <span className="text-white text-sm">System Message</span>
+          <div className="bg-gradient-to-r from-[#0058e6] to-[#3d91ff] p-2 flex justify-between items-center rounded-t-lg cursor-pointer">
+            <span className="text-white text-sm select-none">System Message</span>
             <button
               onClick={(e) => handlePopupClick(e, popup)}
               className="text-white hover:bg-red-500 px-2"
@@ -87,7 +97,7 @@ export default function Home() {
               OK
             </button>
           </div>
-        </div>
+        </motion.div>
       ))}
     </div>
   );
