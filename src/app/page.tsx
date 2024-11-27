@@ -62,29 +62,47 @@ export default function Home() {
   };
 
   const spawnManyPopups = () => {
-    // Create cascading effect with slight offset for each popup
-    const baseSpacing = 30; // pixels between each cascade
-    const startX = 100;
-    const startY = 50;
-    const numPopups = 20; // number of cascading popups
+    // Create multiple spawn points across the screen
+    const numSpawnPoints = 5; // Number of different starting points for cascades
     
-    for (let i = 0; i < numPopups; i++) {
-      setTimeout(() => {
-        createPopup(
-          startX + (i * baseSpacing), 
-          startY + (i * baseSpacing)
-        );
-      }, i * 100); // Add 100ms delay between each popup for dramatic effect
+    for (let sp = 0; sp < numSpawnPoints; sp++) {
+      // Random starting point for each cascade
+      const startX = Math.random() * (window.innerWidth - 500);
+      const startY = Math.random() * (window.innerHeight - 400);
+      const baseSpacing = 30;
+      const numPopups = 8; // popups per cascade
+      
+      for (let i = 0; i < numPopups; i++) {
+        setTimeout(() => {
+          createPopup(
+            startX + (i * baseSpacing), 
+            startY + (i * baseSpacing)
+          );
+          // Play sound for each popup
+          if (audio) {
+            // Clone the audio for overlapping sounds
+            const audioClone = audio.cloneNode() as HTMLAudioElement;
+            audioClone.play();
+          }
+        }, (sp * 200) + (i * 50)); // Stagger the cascades
+      }
     }
   
-    // Also spawn some random ones across the screen
+    // Also spawn completely random ones
     setTimeout(() => {
-      for (let i = 0; i < 15; i++) {
-        const x = Math.random() * (window.innerWidth - 300);
-        const y = Math.random() * (window.innerHeight - 200);
-        createPopup(x, y);
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const x = Math.random() * (window.innerWidth - 300);
+          const y = Math.random() * (window.innerHeight - 200);
+          createPopup(x, y);
+          // Play sound for random popups too
+          if (audio) {
+            const audioClone = audio.cloneNode() as HTMLAudioElement;
+            audioClone.play();
+          }
+        }, i * 50);
       }
-    }, 1000); // Start random spawns after cascade
+    }, 1000);
   };
 
   const handlePopupAction = (e: React.MouseEvent, popup: Popup, action: 'close' | 'claim') => {
@@ -103,11 +121,11 @@ export default function Home() {
         createPopup(x, y);
       }
     } else if (action === 'claim') {
-      // Don't close current popup, spawn chaos
+      // Don't close current popup, spawn multiple waves of chaos
       spawnManyPopups();
-      // Spawn another wave after a delay
-      setTimeout(spawnManyPopups, 2000);
-      setTimeout(spawnManyPopups, 4000);
+      // Spawn additional waves with delays
+      setTimeout(spawnManyPopups, 1500);
+      setTimeout(spawnManyPopups, 3000);
     }
   };
 
