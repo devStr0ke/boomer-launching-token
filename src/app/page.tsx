@@ -8,15 +8,42 @@ type Popup = {
   id: number;
   message: string;
   position: { x: number; y: number };
+  type: 'claim' | 'verify' | 'regular';  // Add different types of popups
 };
 
-const popupMessages = [
-  "🎉 You won 1 Solana! Click here to claim now!",
-  "⚠️ Your $BIGS tokens need urgent verification!",
-  "💰 Congratulations! You're the 1,000,000th visitor!",
-  "🚨 Warning: Your Windows XP needs an update",
-  "💸 Double your $BIGS instantly! Click here!",
-  "🎮 You have won a rare Crypto Monkey NFT!",
+const popupMessages: { message: string; type: 'claim' | 'verify' | 'regular' }[] = [
+  {
+    message: "🎉 You won 1 Solana! Click here to claim now!",
+    type: "claim"
+  },
+  {
+    message: "⚠️ Critical Error: System32 needs verification",
+    type: "verify"
+  },
+  {
+    message: "⚠️ Fatal Exception 0xC000021A",
+    type: "regular"
+  },
+  {
+    message: "🚨 System32.dll not found",
+    type: "regular"
+  },
+  {
+    message: "⚠️ Memory allocation failed at 0x00000000",
+    type: "regular"
+  },
+  {
+    message: "🛑 Stack overflow at address 0xDEADBEEF",
+    type: "regular"
+  },
+  {
+    message: "⚠️ Unexpected error occurred while displaying error",
+    type: "regular"
+  },
+  {
+    message: "🚨 Critical process died",
+    type: "regular"
+  }
 ];
 
 export default function Home() {
@@ -24,12 +51,64 @@ export default function Home() {
   const [audio] = useState(typeof window !== 'undefined' ? new Audio('/erro-2.mp3') : null);
 
   const createPopup = (x: number, y: number) => {
+    const messageObj = popupMessages[Math.floor(Math.random() * popupMessages.length)];
     const newPopup: Popup = {
       id: Math.random(),
-      message: popupMessages[Math.floor(Math.random() * popupMessages.length)],
+      message: messageObj.message,
       position: { x, y },
+      type: messageObj.type
     };
     setPopups(prev => [...prev, newPopup]);
+  };
+
+  const spawnManyPopups = () => {
+    // Create cascading effect with slight offset for each popup
+    const baseSpacing = 30; // pixels between each cascade
+    const startX = 100;
+    const startY = 50;
+    const numPopups = 20; // number of cascading popups
+    
+    for (let i = 0; i < numPopups; i++) {
+      setTimeout(() => {
+        createPopup(
+          startX + (i * baseSpacing), 
+          startY + (i * baseSpacing)
+        );
+      }, i * 100); // Add 100ms delay between each popup for dramatic effect
+    }
+  
+    // Also spawn some random ones across the screen
+    setTimeout(() => {
+      for (let i = 0; i < 15; i++) {
+        const x = Math.random() * (window.innerWidth - 300);
+        const y = Math.random() * (window.innerHeight - 200);
+        createPopup(x, y);
+      }
+    }, 1000); // Start random spawns after cascade
+  };
+
+  const handlePopupAction = (e: React.MouseEvent, popup: Popup, action: 'close' | 'claim') => {
+    e.preventDefault();
+    if (audio) {
+      audio.currentTime = 0;
+      audio.play();
+    }
+  
+    if (action === 'close') {
+      // Regular close behavior - spawn 2 new popups
+      setPopups(prev => prev.filter(p => p.id !== popup.id));
+      for (let i = 0; i < 2; i++) {
+        const x = Math.random() * (window.innerWidth - 300);
+        const y = Math.random() * (window.innerHeight - 200);
+        createPopup(x, y);
+      }
+    } else if (action === 'claim') {
+      // Don't close current popup, spawn chaos
+      spawnManyPopups();
+      // Spawn another wave after a delay
+      setTimeout(spawnManyPopups, 2000);
+      setTimeout(spawnManyPopups, 4000);
+    }
   };
 
   const handlePopupClick = (e: React.MouseEvent, popup: Popup) => {
@@ -79,10 +158,10 @@ export default function Home() {
             top: popup.position.y,
           }}
         >
-          <div className="bg-gradient-to-r from-[#0058e6] to-[#3d91ff] p-2 flex justify-between items-center rounded-t-lg cursor-pointer">
+          <div className="bg-gradient-to-r from-[#0058e6] to-[#3d91ff] p-2 flex justify-between items-center rounded-t-lg cursor-move">
             <span className="text-white text-sm select-none">System Message</span>
             <button
-              onClick={(e) => handlePopupClick(e, popup)}
+              onClick={(e) => handlePopupAction(e, popup, 'close')}
               className="text-white hover:bg-red-500 px-2"
             >
               X
@@ -90,12 +169,29 @@ export default function Home() {
           </div>
           <div className="p-4 text-center">
             <p className="text-black font-system text-sm">⚠️ {popup.message}</p>
-            <button
-              onClick={(e) => handlePopupClick(e, popup)}
-              className="mt-4 bg-[#ECE9D8] border border-gray-400 px-4 py-1 rounded text-black hover:bg-[#e1ddc9]"
-            >
-              OK
-            </button>
+            {popup.type === 'claim' ? (
+              <div className="flex justify-center gap-2 mt-4">
+                <button
+                  onClick={(e) => handlePopupAction(e, popup, 'claim')}
+                  className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+                >
+                  Claim Now!
+                </button>
+                <button
+                  onClick={(e) => handlePopupAction(e, popup, 'close')}
+                  className="bg-[#ECE9D8] border border-gray-400 px-4 py-1 rounded text-black hover:bg-[#e1ddc9]"
+                >
+                  Close
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={(e) => handlePopupAction(e, popup, 'close')}
+                className="mt-4 bg-[#ECE9D8] border border-gray-400 px-4 py-1 rounded text-black hover:bg-[#e1ddc9]"
+              >
+                OK
+              </button>
+            )}
           </div>
         </motion.div>
       ))}
