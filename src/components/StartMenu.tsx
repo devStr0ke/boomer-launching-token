@@ -45,6 +45,10 @@ export default function StartMenu({ isOpen, onClose }: StartMenuProps) {
                 <span className="text-sm font-bold">E-mail</span>
               </div>
             </div>
+            
+            {/* Separator */}
+            <div className="h-[2px] bg-[#D2D2D2] mx-2" />
+
             <div className="flex items-center gap-2 p-1 text-black hover:bg-[#316AC5] hover:text-white rounded group">
               <Image src="/cmd.png" alt="Work" width={32} height={32} />
               <div className="flex flex-col">
@@ -58,32 +62,32 @@ export default function StartMenu({ isOpen, onClose }: StartMenuProps) {
         <div className="flex-1 bg-[#d2e5fa] p-2">
           <div className="flex flex-col gap-2">
             {/* Programs Section */}
-            <div className="mb-4 text-black font-extrabold">
-              <div className="flex items-center gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
+            <div className="mb-4 text-black">
+              <div className="flex items-center font-extrabold gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
                 <Image src="/folder.png" alt="My Documents" width={32} height={32} />
                 <span className="text-xs">My Documents</span>
               </div>
-              <div className="flex items-center gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
+              <div className="flex items-center font-extrabold gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
                 <Image src="/recentdoc.png" alt="Recent Documents" width={32} height={32} />
                 <span className="text-xs">My Recent Documents</span>
                 <span className="ml-auto text-[7px]">▶</span>
               </div>
-              <div className="flex items-center gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
+              <div className="flex items-center font-extrabold gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
                 <Image src="/folder_image.png" alt="My Pictures" width={32} height={32} />
                 <span className="text-xs">My Pictures</span>
               </div>
-              <div className="flex items-center gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
+              <div className="flex items-center font-extrabold gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
                 <Image src="/folder_music.png" alt="My Music" width={32} height={32} />
                 <span className="text-xs">My Music</span>
               </div>
-              <div className="flex items-center gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
+              <div className="flex items-center font-extrabold gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
                 <Image src="/mycomputer.png" alt="My Computer" width={32} height={32} />
                 <span className="text-xs">My Computer</span>
               </div>
-            </div>
+               
+              {/* Separator */}
+              <div className="h-[2px] bg-[#D2D2D2] mx-2" />
 
-            {/* System Section */}
-            <div className="text-black font-light">
               <div className="flex items-center gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
                 <Image src="/clipboard.png" alt="Control Panel" width={32} height={32} />
                 <span className="text-xs">Control Panel</span>
@@ -96,6 +100,10 @@ export default function StartMenu({ isOpen, onClose }: StartMenuProps) {
                 <Image src="/printerfax.png" alt="Printers" width={32} height={32} />
                 <span className="text-xs">Printers and Faxes</span>
               </div>
+               
+              {/* Separator */}
+              <div className="h-[2px] bg-[#D2D2D2] mx-2" />
+
               <div className="flex items-center gap-2 p-1 hover:bg-[#316AC5] hover:text-white rounded">
                 <Image src="/help.png" alt="Help" width={32} height={32} />
                 <span className="text-xs">Help and Support</span>
@@ -108,7 +116,10 @@ export default function StartMenu({ isOpen, onClose }: StartMenuProps) {
                 <Image src="/run.png" alt="Run" width={32} height={32} />
                 <span className="text-xs">Run...</span>
               </div>
+
+              
             </div>
+
           </div>
         </div>
       </div>
