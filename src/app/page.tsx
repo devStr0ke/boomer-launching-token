@@ -176,7 +176,7 @@ export default function Home() {
         <p className="text-2xl text-white mb-8">Boomer Is Getting Scammed</p>
         <button
           onClick={handleBuyClick}
-          className="bg-[#0058e6] text-white px-8 py-4 rounded-lg hover:bg-[#0046b8]"
+          className="bg-[#0058e6] text-white px-8 py-4 rounded-none hover:bg-[#0046b8]"
         >
           Buy $BIGS Now!
         </button>
@@ -189,43 +189,67 @@ export default function Home() {
           drag
           dragMomentum={false}
           onDragStart={() => handleDragStart(popup.id)}
-          className="fixed bg-[#ECE9D8] border-2 border-[#0058e6] rounded-t-lg w-[300px]"
+          className="fixed bg-[#ECE9D8] border border-[#848484] shadow-[2px_2px_3px_rgba(0,0,0,0.25)] rounded-none w-[300px]"
           style={{
             left: popup.position.x,
             top: popup.position.y,
             zIndex: popup.zIndex || 1000
           }}
         >
-          <div className="bg-gradient-to-r from-[#0058e6] to-[#3d91ff] p-2 flex justify-between items-center rounded-t-lg cursor-move">
-            <span className="text-white text-sm select-none">System Message</span>
-            <button
-              onClick={(e) => handlePopupAction(e, popup, 'close')}
-              className="text-white hover:bg-red-500 px-2"
-            >
-              X
-            </button>
+          <div className="bg-gradient-to-r from-[#0054E3] via-[#0054E3] to-[#0054E3] p-1 flex justify-between items-center">
+            <div className="flex items-center gap-1">
+              <Image 
+                src="/error.png" 
+                alt="Warning" 
+                width={16} 
+                height={16} 
+                className="mr-1"
+              />
+              <span className="text-white text-xs font-bold select-none">Windows</span>
+            </div>
+            <div className="flex gap-1">
+              <button
+                onClick={(e) => handlePopupAction(e, popup, 'close')}
+                className="relative w-[20px] h-[20px] group"
+              >
+                <Image 
+                  src="/close.png"
+                  alt="Close"
+                  width={20}
+                  height={20}
+                  className="absolute top-0 left-0 group-hover:hidden"
+                />
+                <Image 
+                  src="/close_hover.png"
+                  alt="Close"
+                  width={20}
+                  height={20}
+                  className="absolute top-0 left-0 hidden group-hover:block"
+                />
+              </button>
+            </div>
           </div>
-          <div className="p-4 text-center">
-            <p className="text-black font-system text-sm">⚠️ {popup.message}</p>
+          <div className="p-4 text-center flex flex-col items-center">
+            <p className="text-black font-system text-sm mb-4">{popup.message}</p>
             {popup.type === 'claim' ? (
-              <div className="flex justify-center gap-2 mt-4">
+              <div className="flex justify-center gap-2">
                 <button
                   onClick={(e) => handlePopupAction(e, popup, 'claim')}
-                  className="bg-green-500 text-white px-4 py-1 rounded hover:bg-green-600"
+                  className="min-w-[75px] px-4 py-1 text-black bg-[#ECE9D8] border-t border-l border-[#ffffff] border-r-2 border-b-2 border-r-[#848484] border-b-[#848484] active:border active:border-[#848484] active:border-t-[#404040] active:border-l-[#404040]"
                 >
                   Claim Now!
                 </button>
                 <button
                   onClick={(e) => handlePopupAction(e, popup, 'close')}
-                  className="bg-[#ECE9D8] border border-gray-400 px-4 py-1 rounded text-black hover:bg-[#e1ddc9]"
+                  className="min-w-[75px] px-4 py-1 text-black bg-[#ECE9D8] border-t border-l border-[#ffffff] border-r-2 border-b-2 border-r-[#848484] border-b-[#848484] active:border active:border-[#848484] active:border-t-[#404040] active:border-l-[#404040]"
                 >
-                  Close
+                  Cancel
                 </button>
               </div>
             ) : (
               <button
                 onClick={(e) => handlePopupAction(e, popup, 'close')}
-                className="mt-4 bg-[#ECE9D8] border border-gray-400 px-4 py-1 rounded text-black hover:bg-[#e1ddc9]"
+                className="min-w-[75px] px-4 py-1 text-black bg-[#ECE9D8] border-t border-l border-[#ffffff] border-r-2 border-b-2 border-r-[#848484] border-b-[#848484] active:border active:border-[#848484] active:border-t-[#404040] active:border-l-[#404040]"
               >
                 OK
               </button>
