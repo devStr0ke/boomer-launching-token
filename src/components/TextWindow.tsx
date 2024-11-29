@@ -14,17 +14,8 @@ export default function TextWindow({ isOpen, onClose, content, title }: TextWind
 
   if (!isOpen) return null;
 
-  return (
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      className={`fixed bg-white border border-[#848484] shadow-lg ${
-        isMaximized ? 'left-0 top-0 right-0 bottom-0 w-full h-full' : 'left-[20%] top-[20%] w-[500px]'
-      }`}
-      drag={!isMaximized}
-      dragMomentum={false}
-    >
+  const WindowContent = () => (
+    <>
       {/* Title Bar */}
       <div className="bg-gradient-to-r from-[#0054E3] via-[#0054E3] to-[#0054E3] p-1 flex justify-between items-center h-[28px]">
         <div className="flex items-center gap-1">
@@ -114,6 +105,37 @@ export default function TextWindow({ isOpen, onClose, content, title }: TextWind
           {content}
         </pre>
       </div>
-    </motion.div>
+    </>
+  );
+
+  return (
+    <>
+      {/* Maximized Window - Always positioned the same way */}
+      {isMaximized && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className="fixed inset-0 bg-white border border-[#848484] shadow-lg"
+          style={{ transform: 'none' }}
+        >
+          <WindowContent />
+        </motion.div>
+      )}
+
+      {/* Regular draggable window */}
+      {!isMaximized && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          className="fixed left-[20%] top-[20%] w-[500px] bg-white border border-[#848484] shadow-lg"
+          drag
+          dragMomentum={false}
+        >
+          <WindowContent />
+        </motion.div>
+      )}
+    </>
   );
 }
