@@ -2,6 +2,8 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import DesktopIcon from '@/components/DesktopIcon';
+import TextWindow from '@/components/TextWindow';
 
 // Create a type for our popup
 type Popup = {
@@ -51,6 +53,7 @@ export default function Home() {
   const [popups, setPopups] = useState<Popup[]>([]);
   const [audio] = useState(typeof window !== 'undefined' ? new Audio('/erro-2.mp3') : null);
   const [topZIndex, setTopZIndex] = useState(1000);
+  const [isTextWindowOpen, setIsTextWindowOpen] = useState(false);
 
   const handleBuyClick = () => {
     if (audio) {
@@ -165,11 +168,37 @@ export default function Home() {
     }
   };
 
+  const textContent = `Hello World!
+  Features:
+  - Desktop icons are clickable. Double clicking them takes you to some of my links (github, twitter).
+  - Time in system tray is your system's time.
+  - This window is draggable, closable, minimizable and maximizable.
+  - Try it!
+  - The opened tabs in taskbar also take you to my links, same as the icons.
+
+  The code is on github. Star the repository if you liked this.
+  Contributions to this repository are welcome and appreciated.`;
+
   return (
     <div 
       className="min-h-screen bg-cover bg-center relative overflow-hidden"
       style={{ backgroundImage: "url('/xp-background.jpg')" }}
     >
+      {/* Desktop Icons */}
+      <DesktopIcon
+        name="ReadME.txt"
+        icon="/txt_windows_xp.png"
+        onClick={() => setIsTextWindowOpen(true)}
+        position={{ x: 20, y: 20 }}
+      />
+      
+      {/* Text Window */}
+      <TextWindow
+        isOpen={isTextWindowOpen}
+        onClose={() => setIsTextWindowOpen(false)}
+        content={textContent}
+        title="ReadME.txt"
+      />
       {/* Main Content */}
       <main className="flex flex-col items-center pt-20 text-center">
         <h1 className="text-6xl font-bold text-white mb-4">$BIGS</h1>
