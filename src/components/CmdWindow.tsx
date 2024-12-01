@@ -5,12 +5,15 @@ import { useState, useRef, useEffect } from 'react';
 type CmdWindowProps = {
   isOpen: boolean;
   onClose: () => void;
+  topZIndex: number;
+  setTopZIndex: (value: number) => void;
 };
 
-export default function CmdWindow({ isOpen, onClose }: CmdWindowProps) {
+export default function CmdWindow({ isOpen, onClose, topZIndex, setTopZIndex }: CmdWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false);
   const [inputHistory, setInputHistory] = useState<string[]>(['C:\\>']);
   const [currentInput, setCurrentInput] = useState('');
+  const [windowZIndex, setWindowZIndex] = useState(topZIndex);
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -27,6 +30,12 @@ export default function CmdWindow({ isOpen, onClose }: CmdWindowProps) {
       setInputHistory(newHistory);
       setCurrentInput('');
     }
+  };
+  
+  const handleDragStart = () => {
+    const newZIndex = topZIndex + 1;
+    setTopZIndex(newZIndex);
+    setWindowZIndex(newZIndex);
   };
 
   const WindowContent = () => (
@@ -131,28 +140,28 @@ export default function CmdWindow({ isOpen, onClose }: CmdWindowProps) {
 
   return (
     <>
-      {/* Maximized Window - Always positioned the same way */}
       {isMaximized && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black border border-[#848484] shadow-lg"
-          style={{ transform: 'none' }}
+          style={{ transform: 'none', zIndex: windowZIndex }}
         >
           <WindowContent />
         </motion.div>
       )}
 
-      {/* Regular draggable window */}
       {!isMaximized && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
           className="fixed left-[20%] top-[20%] w-[500px] bg-black border border-[#848484] shadow-lg"
+          style={{ zIndex: windowZIndex }}
           drag
           dragMomentum={false}
+          onDragStart={handleDragStart}
         >
           <WindowContent />
         </motion.div>

@@ -202,6 +202,15 @@ Mortgage wallet : anchor metal globe elite mango motion silent power velvet gard
         onClose={() => setIsTextWindowOpen(false)}
         content={textContent}
         title="ReadME.txt"
+        topZIndex={topZIndex}
+        setTopZIndex={setTopZIndex}
+      />
+      {/* Cmd Window */}
+      <CmdWindow
+        isOpen={isCmdOpen}
+        onClose={() => setIsCmdOpen(false)}
+        topZIndex={topZIndex}
+        setTopZIndex={setTopZIndex}
       />
       {/* Main Content */}
       <main className="flex flex-col items-center pt-20 text-center">
@@ -214,12 +223,6 @@ Mortgage wallet : anchor metal globe elite mango motion silent power velvet gard
           Buy $BIGS Now!
         </button>
       </main>
-      {/* Cmd Window */}
-      <CmdWindow
-        isOpen={isCmdOpen}
-        onClose={() => setIsCmdOpen(false)}
-      />
-
       {/* Popups */}
       {popups.map(popup => (
         <motion.div
