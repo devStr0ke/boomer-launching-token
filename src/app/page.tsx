@@ -193,8 +193,8 @@ Mortgage wallet : anchor metal globe elite mango motion silent power velvet gard
         icon="/cmd.png"
         onClick={() => setIsCmdOpen(true)}
         position={{ x: 20, y: 120 }}
-        width={50}
-        height={50}
+        width={45}
+        height={45}
       />
       {/* Text Window */}
       <TextWindow

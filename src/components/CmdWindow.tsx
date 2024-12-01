@@ -131,21 +131,26 @@ export default function CmdWindow({ isOpen, onClose }: CmdWindowProps) {
 
   return (
     <>
-      {isMaximized ? (
+      {/* Maximized Window - Always positioned the same way */}
+      {isMaximized && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           className="fixed inset-0 bg-black border border-[#848484] shadow-lg"
+          style={{ transform: 'none' }}
         >
           <WindowContent />
         </motion.div>
-      ) : (
+      )}
+
+      {/* Regular draggable window */}
+      {!isMaximized && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
-          className="fixed left-[30%] top-[20%] w-[500px] bg-black border border-[#848484] shadow-lg"
+          className="fixed left-[20%] top-[20%] w-[500px] bg-black border border-[#848484] shadow-lg"
           drag
           dragMomentum={false}
         >
