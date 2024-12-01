@@ -5,7 +5,9 @@ import { useState, useEffect } from "react";
 import DesktopIcon from '@/components/DesktopIcon';
 import TextWindow from '@/components/TextWindow';
 import CmdWindow from "@/components/CmdWindow";
+import { seedPhrasesContent } from '@/utils/fileSystems';
 
+// Use seedPhrasesContent in your desktop icon click handler
 // Create a type for our popup
 type Popup = {
   zIndex?: number;
@@ -55,6 +57,8 @@ export default function Home() {
   const [audio] = useState(typeof window !== 'undefined' ? new Audio('/erro-2.mp3') : null);
   const [topZIndex, setTopZIndex] = useState(1000);
   const [isTextWindowOpen, setIsTextWindowOpen] = useState(false);
+  const [textContent, setTextContent] = useState('');
+  const [textTitle, setTextTitle] = useState('');
   const [isCmdOpen, setIsCmdOpen] = useState(false);
 
   const handleBuyClick = () => {
@@ -73,6 +77,12 @@ export default function Home() {
       ...p,
       zIndex: p.id === popupId ? topZIndex : p.zIndex || 1000
     })));
+  };
+
+  const handleOpenTextWindow = (content: string, title: string) => {
+    setTextContent(content);
+    setTextTitle(title);
+    setIsTextWindowOpen(true);
   };
 
   const createPopup = (x: number, y: number) => {
@@ -173,11 +183,6 @@ export default function Home() {
     }
   };
 
-  const textContent = `Wallet seed phrases to remember if  I get Alzheimer (I'm not sure if I'm going to get Alzheimer, but I'm going to write them down anyway) : 
-Retirement wallet : pencil nature travel focus ladder talent unique skate glance immense echo village
-Mortgage wallet : anchor metal globe elite mango motion silent power velvet garden glove beyond
-  `;
-
   return (
     <div 
       className="min-h-screen bg-cover bg-center relative overflow-hidden"
@@ -187,7 +192,7 @@ Mortgage wallet : anchor metal globe elite mango motion silent power velvet gard
       <DesktopIcon
         name="SeedPhrases.txt"
         icon="/txt_windows_xp.png"
-        onClick={() => setIsTextWindowOpen(true)}
+        onClick={() => handleOpenTextWindow(seedPhrasesContent, "SeedPhrases.txt")}
         position={{ x: 20, y: 20 }}
         imageClassName="mb-[-15px]"
       />
@@ -204,7 +209,7 @@ Mortgage wallet : anchor metal globe elite mango motion silent power velvet gard
         isOpen={isTextWindowOpen}
         onClose={() => setIsTextWindowOpen(false)}
         content={textContent}
-        title="ReadME.txt"
+        title="SeedPhrases.txt"
         topZIndex={topZIndex}
         setTopZIndex={setTopZIndex}
       />
@@ -214,6 +219,7 @@ Mortgage wallet : anchor metal globe elite mango motion silent power velvet gard
         onClose={() => setIsCmdOpen(false)}
         topZIndex={topZIndex}
         setTopZIndex={setTopZIndex}
+        openTextWindow={handleOpenTextWindow}
       />
       {/* Main Content */}
       <main className="flex flex-col items-center pt-20 text-center">

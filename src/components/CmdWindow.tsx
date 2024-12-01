@@ -1,28 +1,19 @@
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 import { useState, useRef, useEffect } from 'react';
+import { fileSystem } from '@/utils/fileSystems';
 
 type CmdWindowProps = {
   isOpen: boolean;
   onClose: () => void;
   topZIndex: number;
   setTopZIndex: (value: number) => void;
+  openTextWindow: (content: string, title: string) => void;
 };
 
-type FileSystemItem = {
-  name: string;
-  type: 'file' | 'directory';
-  content?: string;
-  children?: { [key: string]: FileSystemItem };
-};
-
-type FileSystem = {
-  [key: string]: FileSystemItem;
-};
-
-export default function CmdWindow({ isOpen, onClose, topZIndex, setTopZIndex }: CmdWindowProps) {
+export default function CmdWindow({ isOpen, onClose, topZIndex, setTopZIndex, openTextWindow }: CmdWindowProps) {
   const [isMaximized, setIsMaximized] = useState(false);
-  const [inputHistory, setInputHistory] = useState<string[]>(['C:\\Users\\Boomer>']);
+  const [inputHistory, setInputHistory] = useState<string[]>([]);
   const [currentInput, setCurrentInput] = useState('');
   const [currentPath, setCurrentPath] = useState(['C:', 'Users', 'Boomer']);
   const [windowZIndex, setWindowZIndex] = useState(0);
@@ -42,47 +33,6 @@ export default function CmdWindow({ isOpen, onClose, topZIndex, setTopZIndex }: 
     }
   }, [isOpen]);
 
-  const fileSystem: FileSystem = {
-    'C:': {
-      name: 'C:',
-      type: 'directory',
-      children: {
-        Users: {
-          name: 'Users',
-          type: 'directory',
-          children: {
-            Boomer: {
-              name: 'Boomer',
-              type: 'directory',
-              children: {
-                Desktop: {
-                  name: 'Desktop',
-                  type: 'directory',
-                  children: {
-                    'SeedPhrases.txt': {
-                      name: 'SeedPhrases.txt',
-                      type: 'file',
-                      content: 'Retirement wallet: pencil nature travel focus ladder talent unique skate glance immense echo village\nMortgage wallet: anchor metal globe elite mango motion silent power velvet garden glove beyond'
-                    },
-                    'Command Prompt': {
-                      name: 'Command Prompt',
-                      type: 'file'
-                    }
-                  }
-                },
-                Documents: {
-                  name: 'Documents',
-                  type: 'directory',
-                  children: {}
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  };
-
   const getCurrentDirectory = () => {
     let current = fileSystem;
     for (const part of currentPath) {
@@ -92,16 +42,41 @@ export default function CmdWindow({ isOpen, onClose, topZIndex, setTopZIndex }: 
   };
 
   const handleCommand = (command: string) => {
-    const parts = command.trim().split(' ');  // Remove toLowerCase() here
-    const cmd = parts[0].toLowerCase();  // Only make the command lowercase
-    const args = parts.slice(1);  // Keep original case for arguments
+    const parts = command.trim().split(' '); 
+    const cmd = parts[0].toLowerCase();  
+    const args = parts.slice(1);
     let output: string[] = [];
   
     switch (cmd) {
       case 'cls':
-        setInputHistory(['C:\\' + currentPath.slice(1).join('\\') + '>']);
+        setInputHistory([]); // Clear the history completely
+        return;
+      case 'notepad':
+        if (args.length === 0) {
+          output = ['Error: Please specify a file name'];
+          break;
+        }
+        
+        const fileName = args[0];
+        if (!fileName.toLowerCase().endsWith('.txt')) {
+          output = ['Error: Only .txt files are supported'];
+          break;
+        }
+
+        // Find the file in current directory
+        const currentDirNotepad = getCurrentDirectory();
+        const fileNotepad = Object.values(currentDirNotepad).find(
+          item => item.type === 'file' && 
+          item.name.toLowerCase() === fileName.toLowerCase()
+        );
+
+        if (fileNotepad && fileNotepad.content) {
+          openTextWindow(fileNotepad.content, fileNotepad.name);
+          output = [`Opening ${fileName}...`];
+        } else {
+          output = [`The file '${fileName}' does not exist`];
+        }
         break;
-  
       case 'ls':
       case 'dir':
         const currentDir = getCurrentDirectory();
