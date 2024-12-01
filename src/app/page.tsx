@@ -62,6 +62,8 @@ export default function Home() {
       audio.currentTime = 0;
       audio.play();
     }
+    // Increase topZIndex before creating popup
+    setTopZIndex(prev => prev + 1);
     createPopup(window.innerWidth/2, window.innerHeight/2);
   };
 
@@ -79,7 +81,8 @@ export default function Home() {
       id: Math.random(),
       message: messageObj.message,
       position: { x, y },
-      type: messageObj.type
+      type: messageObj.type,
+      zIndex: topZIndex  // Use the current topZIndex for new popups
     };
     setPopups(prev => [...prev, newPopup]);
   };

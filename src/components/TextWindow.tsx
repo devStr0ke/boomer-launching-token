@@ -23,6 +23,13 @@ export default function TextWindow({ isOpen, onClose, content, title, topZIndex,
     setWindowZIndex(newZIndex);
   };
 
+  const handleMaximize = () => {
+    const newZIndex = topZIndex + 1;
+    setTopZIndex(newZIndex);
+    setWindowZIndex(newZIndex);
+    setIsMaximized(!isMaximized);
+  };
+
   const WindowContent = () => (
     <>
       {/* Title Bar */}
@@ -59,7 +66,7 @@ export default function TextWindow({ isOpen, onClose, content, title, topZIndex,
           
           {/* Maximize/Restore */}
           <button 
-            onClick={() => setIsMaximized(!isMaximized)}
+            onClick={handleMaximize}  // Replace the old onClick handler
             className="relative w-[20px] h-[20px] group"
           >
             <Image 

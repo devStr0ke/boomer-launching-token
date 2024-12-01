@@ -31,11 +31,18 @@ export default function CmdWindow({ isOpen, onClose, topZIndex, setTopZIndex }: 
       setCurrentInput('');
     }
   };
-  
+
   const handleDragStart = () => {
     const newZIndex = topZIndex + 1;
     setTopZIndex(newZIndex);
     setWindowZIndex(newZIndex);
+  };
+
+  const handleMaximize = () => {
+    const newZIndex = topZIndex + 1;
+    setTopZIndex(newZIndex);
+    setWindowZIndex(newZIndex);
+    setIsMaximized(!isMaximized);
   };
 
   const WindowContent = () => (
@@ -71,7 +78,7 @@ export default function CmdWindow({ isOpen, onClose, topZIndex, setTopZIndex }: 
           </button>
           
           <button 
-            onClick={() => setIsMaximized(!isMaximized)}
+            onClick={handleMaximize}  // Replace the old onClick handler
             className="relative w-[20px] h-[20px] group"
           >
             <Image 
