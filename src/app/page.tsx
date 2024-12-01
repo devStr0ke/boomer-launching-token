@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import DesktopIcon from '@/components/DesktopIcon';
 import TextWindow from '@/components/TextWindow';
+import CmdWindow from "@/components/CmdWindow";
 
 // Create a type for our popup
 type Popup = {
@@ -54,6 +55,7 @@ export default function Home() {
   const [audio] = useState(typeof window !== 'undefined' ? new Audio('/erro-2.mp3') : null);
   const [topZIndex, setTopZIndex] = useState(1000);
   const [isTextWindowOpen, setIsTextWindowOpen] = useState(false);
+  const [isCmdOpen, setIsCmdOpen] = useState(false);
 
   const handleBuyClick = () => {
     if (audio) {
@@ -168,16 +170,10 @@ export default function Home() {
     }
   };
 
-  const textContent = `Hello World!
-  Features:
-  - Desktop icons are clickable. Double clicking them takes you to some of my links (github, twitter).
-  - Time in system tray is your system's time.
-  - This window is draggable, closable, minimizable and maximizable.
-  - Try it!
-  - The opened tabs in taskbar also take you to my links, same as the icons.
-
-  The code is on github. Star the repository if you liked this.
-  Contributions to this repository are welcome and appreciated.`;
+  const textContent = `Wallet seed phrases to remember if  I get Alzheimer (I'm not sure if I'm going to get Alzheimer, but I'm going to write them down anyway) : 
+Retirement wallet : pencil nature travel focus ladder talent unique skate glance immense echo village
+Mortgage wallet : anchor metal globe elite mango motion silent power velvet garden glove beyond
+  `;
 
   return (
     <div 
@@ -186,12 +182,20 @@ export default function Home() {
     >
       {/* Desktop Icons */}
       <DesktopIcon
-        name="ReadME.txt"
+        name="SeedPhrases.txt"
         icon="/txt_windows_xp.png"
         onClick={() => setIsTextWindowOpen(true)}
         position={{ x: 20, y: 20 }}
+        imageClassName="mb-[-15px]"
       />
-      
+      <DesktopIcon
+        name="Command Prompt"
+        icon="/cmd.png"
+        onClick={() => setIsCmdOpen(true)}
+        position={{ x: 20, y: 120 }}
+        width={50}
+        height={50}
+      />
       {/* Text Window */}
       <TextWindow
         isOpen={isTextWindowOpen}
@@ -210,6 +214,11 @@ export default function Home() {
           Buy $BIGS Now!
         </button>
       </main>
+      {/* Cmd Window */}
+      <CmdWindow
+        isOpen={isCmdOpen}
+        onClose={() => setIsCmdOpen(false)}
+      />
 
       {/* Popups */}
       {popups.map(popup => (
