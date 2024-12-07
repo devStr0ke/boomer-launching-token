@@ -4,9 +4,10 @@ import Image from 'next/image';
 type StartMenuProps = {
   isOpen: boolean;
   onClose: () => void;
+  onOpenCmd: () => void;
 }
 
-export default function StartMenu({ isOpen, onClose }: StartMenuProps) {
+export default function StartMenu({ isOpen, onClose, onOpenCmd }: StartMenuProps) {
   if (!isOpen) return null;
 
   return (
@@ -49,7 +50,12 @@ export default function StartMenu({ isOpen, onClose }: StartMenuProps) {
             {/* Separator */}
             <div className="h-[2px] bg-[#D2D2D2] mx-2" />
 
-            <div className="flex items-center gap-2 p-1 text-black hover:bg-[#316AC5] hover:text-white rounded group">
+            <div 
+              onClick={() => {
+                onOpenCmd();
+                onClose();
+              }}
+              className="flex items-center gap-2 p-1 text-black hover:bg-[#316AC5] hover:text-white rounded group">
               <Image src="/cmd.png" alt="Work" width={32} height={32} />
               <div className="flex flex-col">
                 <span className="text-sm font-bold">CMD</span>

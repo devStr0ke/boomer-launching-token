@@ -2,9 +2,11 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import StartMenu from './StartMenu';
+import CmdWindow from './CmdWindow';
 
 export default function TaskBar() {
   const [isStartMenuOpen, setIsStartMenuOpen] = useState(false);
+  const [isCmdOpen, setIsCmdOpen] = useState(false);
   
   const currentTime = new Date().toLocaleTimeString('en-US', {
     hour: 'numeric',
@@ -96,6 +98,15 @@ export default function TaskBar() {
       <StartMenu 
         isOpen={isStartMenuOpen} 
         onClose={() => setIsStartMenuOpen(false)} 
+        onOpenCmd={() => setIsCmdOpen(true)}
+        isCmdOpen={isCmdOpen}
+      />
+      <CmdWindow
+        isOpen={isCmdOpen}
+        onClose={() => setIsCmdOpen(false)}
+        topZIndex={9999}
+        setTopZIndex={() => {}}
+        openTextWindow={() => {}}
       />
     </>
   );
