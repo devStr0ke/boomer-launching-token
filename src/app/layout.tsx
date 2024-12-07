@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import TaskBar from "@/components/Taskbar";
 import ClickOutsideProvider from "@/utils/ClickOutsideProvider";
+import { WindowProvider } from "@/contexts/WindowContext";
+import WindowManager from '@/components/WindowManager';
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -30,10 +32,13 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ClickOutsideProvider>
-          {children}
-          <TaskBar />
-        </ClickOutsideProvider>
+        <WindowProvider>
+          <ClickOutsideProvider>
+            {children}
+            <TaskBar />
+            <WindowManager />
+          </ClickOutsideProvider>
+        </WindowProvider>
       </body>
     </html>
   );

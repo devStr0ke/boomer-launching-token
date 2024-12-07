@@ -6,6 +6,7 @@ import DesktopIcon from '@/components/DesktopIcon';
 import TextWindow from '@/components/TextWindow';
 import CmdWindow from "@/components/CmdWindow";
 import { seedPhrasesContent } from '@/utils/fileSystems';
+import { useWindow } from '@/contexts/WindowContext';
 
 // Use seedPhrasesContent in your desktop icon click handler
 // Create a type for our popup
@@ -56,10 +57,7 @@ export default function Home() {
   const [popups, setPopups] = useState<Popup[]>([]);
   const [audio] = useState(typeof window !== 'undefined' ? new Audio('/erro-2.mp3') : null);
   const [topZIndex, setTopZIndex] = useState(1000);
-  const [isTextWindowOpen, setIsTextWindowOpen] = useState(false);
-  const [textContent, setTextContent] = useState('');
-  const [textTitle, setTextTitle] = useState('');
-  const [isCmdOpen, setIsCmdOpen] = useState(false);
+  const { openWindow, windows } = useWindow();
 
   const handleBuyClick = () => {
     if (audio) {
@@ -80,9 +78,7 @@ export default function Home() {
   };
 
   const handleOpenTextWindow = (content: string, title: string) => {
-    setTextContent(content);
-    setTextTitle(title);
-    setIsTextWindowOpen(true);
+    openWindow('text', { content, title });
   };
 
   const createPopup = (x: number, y: number) => {
@@ -190,37 +186,21 @@ export default function Home() {
     >
       {/* Desktop Icons */}
       <DesktopIcon
+        name="Command Prompt"
+        icon="/cmd.png"
+        onClick={() => openWindow('cmd')}
+        position={{ x: 20, y: 120 }}
+        width={45}
+        height={45}
+      />
+      <DesktopIcon
         name="SeedPhrases.txt"
         icon="/txt_windows_xp.png"
         onClick={() => handleOpenTextWindow(seedPhrasesContent, "SeedPhrases.txt")}
         position={{ x: 20, y: 20 }}
         imageClassName="mb-[-15px]"
       />
-      <DesktopIcon
-        name="Command Prompt"
-        icon="/cmd.png"
-        onClick={() => setIsCmdOpen(true)}
-        position={{ x: 20, y: 120 }}
-        width={45}
-        height={45}
-      />
-      {/* Text Window */}
-      <TextWindow
-        isOpen={isTextWindowOpen}
-        onClose={() => setIsTextWindowOpen(false)}
-        content={textContent}
-        title="SeedPhrases.txt"
-        topZIndex={topZIndex}
-        setTopZIndex={setTopZIndex}
-      />
-      {/* Cmd Window */}
-      <CmdWindow
-        isOpen={isCmdOpen}
-        onClose={() => setIsCmdOpen(false)}
-        topZIndex={topZIndex}
-        setTopZIndex={setTopZIndex}
-        openTextWindow={handleOpenTextWindow}
-      />
+      {/* Windows */}
       {/* Main Content */}
       <main className="flex flex-col items-center pt-20 text-center">
         <h1 className="text-6xl font-bold text-white mb-4">$BIGS</h1>
